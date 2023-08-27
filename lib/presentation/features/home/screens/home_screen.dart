@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movily_app/domain/entities/genre.dart';
+import 'package:movily_app/domain/entities/movie.dart';
+import 'package:movily_app/domain/usecase/provider/get_genre_usecase_provider.dart';
+import 'package:movily_app/domain/usecase/provider/get_movies_by_genre_usecase_provider.dart';
 import 'package:movily_app/presentation/base/app_constants.dart';
 import 'package:movily_app/presentation/features/home/widgets/movie_genres_list.dart';
 import 'package:movily_app/presentation/features/home/widgets/movie_list.dart';
@@ -12,56 +16,78 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final bool _isGenreLoading = false;
-  final bool _isMovieLoading = false;
+  bool _isGenreLoading = true;
+  bool _isMovieLoading = false;
+  late List<Genre> _allGenre;
+  List<Movie> _filteredMovies = [];
   final TextEditingController _searchControler = TextEditingController();
 
-  void loadData() async {}
+  @override
+  void initState() {
+    super.initState();
+    _loadGenre();
+  }
+
+  void _loadGenre() async {
+    setState(() {
+      _isGenreLoading = true;
+    });
+    final getGenreUsecase = ref.read(getGenreUseCaseProvider);
+    final genres = await getGenreUsecase.execute();
+    if (genres == null || genres.isEmpty) {
+      _showMessage("Could not show data right Now");
+    } else {
+      setState(() {
+        _isGenreLoading = false;
+        _isMovieLoading = true;
+        _allGenre = genres;
+      });
+      _loadMoviesByGenre(_allGenre[0]);
+    }
+  }
+
+  void _loadMoviesByGenre(Genre genre) async {
+    setState(() {
+      _isGenreLoading = false;
+      _isMovieLoading = true;
+    });
+    final getMoviesByGenreUseCase = ref.read(getMoviesByGenreUseCaseProvider);
+    final movies = await getMoviesByGenreUseCase.execute(genre.name);
+    if (movies.isNotEmpty) {
+      _filteredMovies.clear();
+      final modified = movies.map((movie) {
+        movie.title = "${genre.name}\n${movie.title}";
+        return movie;
+      }).toList();
+      setState(() {
+        _filteredMovies.addAll(modified);
+        _isMovieLoading = false;
+      });
+    }
+  }
+
+  void _showMessage(String msg) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+      ),
+    );
+  }
+
+  void _onSelectGenre(Genre genre) {
+    _loadMoviesByGenre(genre);
+  }
 
   @override
   Widget build(BuildContext context) {
-    /*return return Scaffold(
-      appBar: AppBar(
-        title: const Text('flutterassets.com'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          // Add padding around the search bar
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          // Use a Material design search bar
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search...',
-              // Add a clear button to the search bar
-              suffixIcon: IconButton(
-                icon: Icon(Icons.clear),
-                onPressed: () => _searchController.clear(),
-              ),
-              // Add a search icon or button to the search bar
-              prefixIcon: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  // Perform the search here
-                },
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );*/
-
     Widget content = const Center(
       child: Text(
         'Welcome to Movily App',
       ),
     );
     if (_isGenreLoading) {
-      content = _getGenreLoadingWidget();
+      content = _getLoadingWidget();
     } else {
       content = Padding(
         padding: EdgeInsets.only(top: 16),
@@ -69,16 +95,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             Container(
               height: 44,
-              child: const MovieGeneresList(
-                genres: [
-                  "Action",
-                  "Adventure",
-                  "Animation",
-                  "Comedy",
-                  "Crime",
-                  "Documentary",
-                  "Drama"
-                ],
+              child: MovieGeneresList(
+                genres: _allGenre,
+                onSelectedGenre: _onSelectGenre,
               ),
             ),
             const SizedBox(
@@ -108,7 +127,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            Expanded(child: MovieList()),
+            _isMovieLoading
+                ? _getLoadingWidget()
+                : Expanded(
+                    child: MovieList(
+                    movieList: _filteredMovies,
+                  )),
           ],
         ),
       );
@@ -124,24 +148,53 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _getGenreLoadingWidget() {
+  Widget _getLoadingWidget() {
     return const Center(
       child: CircularProgressIndicator(),
     );
   }
-}
-/*
-Expanded(
-              child: MovieGeneresList(
-                genres: [
-                  "Action",
-                  "Adventure",
-                  "Animation",
-                  "Comedy",
-                  "Crime",
-                  "Documentary",
-                  "Drama"
-                ],
+
+  /*Widget _getMovieLoadingWidget(List<Genre> genreList) {
+    return Padding(
+      padding: EdgeInsets.only(top: 16),
+      child: Column(
+        children: [
+          Container(
+            height: 44,
+            child: MovieGeneresList(
+              genres: genreList,
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextField(
+              controller: _searchControler,
+              decoration: InputDecoration(
+                hintText: 'Search your movie...',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () => _searchControler.clear(),
+                ),
+                prefixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    // Perform the search here
+                    print(_searchControler.text);
+                  },
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
               ),
             ),
-            */
+          ),
+          const SizedBox(height: 24),
+          _getLoadingWidget(),
+        ],
+      ),
+    );
+  }*/
+}

@@ -5,70 +5,9 @@ import 'package:movily_app/domain/entities/movie.dart';
 import 'package:movily_app/presentation/features/home/widgets/movie_grid_item.dart';
 
 class MovieList extends ConsumerWidget {
-  MovieList({super.key});
+  const MovieList({required this.movieList, super.key});
 
-  final List<Movie> _movieList = [
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-    const Movie(
-        title: "Avenger",
-        backdropPath:
-            'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
-        voteCount: 1,
-        voteAverage: 5),
-  ];
+  final List<Movie> movieList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,7 +20,7 @@ class MovieList extends ConsumerWidget {
         mainAxisSpacing: 20,
       ),
       children: [
-        for (final Movie movie in _movieList)
+        for (final Movie movie in movieList)
           MovieGridItem(
             movie: movie,
           )

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movily_app/domain/entities/genre.dart';
 
 class MovieGeneresList extends ConsumerStatefulWidget {
-  const MovieGeneresList({required this.genres, super.key});
+  const MovieGeneresList(
+      {required this.genres, required this.onSelectedGenre, super.key});
 
-  final List<String> genres;
+  final void Function(Genre) onSelectedGenre;
+  final List<Genre> genres;
 
   @override
   ConsumerState<MovieGeneresList> createState() => _MovieGeneresListState();
@@ -29,6 +31,7 @@ class _MovieGeneresListState extends ConsumerState<MovieGeneresList> {
             setState(() {
               _selectedIdx = index;
             });
+            widget.onSelectedGenre(widget.genres[index]);
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
@@ -38,7 +41,7 @@ class _MovieGeneresListState extends ConsumerState<MovieGeneresList> {
                 : const Color.fromARGB(255, 202, 221, 227),
           ),
           child: Text(
-            widget.genres[index],
+            widget.genres[index].name,
             style: TextStyle(
               color: _selectedIdx == index ? Colors.white : Colors.black,
               fontSize: 14,

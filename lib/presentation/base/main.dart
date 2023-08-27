@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movily_app/presentation/features/home/screens/home_screen.dart';
 
 void main() {
-  runApp(const MovilyApp());
+  runApp(const ProviderScope(child: MovilyApp()));
 }
 
 class MovilyApp extends StatelessWidget {
