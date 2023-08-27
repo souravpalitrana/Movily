@@ -4,6 +4,7 @@ import 'package:movily_app/domain/entities/genre.dart';
 import 'package:movily_app/domain/entities/movie.dart';
 import 'package:movily_app/domain/usecase/provider/get_genre_usecase_provider.dart';
 import 'package:movily_app/domain/usecase/provider/get_movies_by_genre_usecase_provider.dart';
+import 'package:movily_app/domain/usecase/provider/search_movie_usecase_provider.dart';
 import 'package:movily_app/presentation/base/app_constants.dart';
 import 'package:movily_app/presentation/features/home/widgets/movie_genres_list.dart';
 import 'package:movily_app/presentation/features/home/widgets/movie_list.dart';
@@ -19,7 +20,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isGenreLoading = true;
   bool _isMovieLoading = false;
   late List<Genre> _allGenre;
-  List<Movie> _filteredMovies = [];
+  final List<Movie> _filteredMovies = [];
   final TextEditingController _searchControler = TextEditingController();
 
   @override
@@ -79,6 +80,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _loadMoviesByGenre(genre);
   }
 
+  void _searchMovie(String keyword) async {
+    final searchMovieUseCase = ref.read(searchMovieUseCaseProvider);
+    setState(() {
+      _isMovieLoading = true;
+    });
+    final searchedMovies = await searchMovieUseCase.execute(keyword);
+    if (searchedMovies.isEmpty) {
+      _showMessage("No result found");
+    } else {
+      setState(() {
+        _filteredMovies.clear();
+        final modified = searchedMovies.map((movie) {
+          movie.title = "Cached Data\n${movie.title}";
+          return movie;
+        }).toList();
+        setState(() {
+          _filteredMovies.addAll(modified);
+          _isMovieLoading = false;
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget content = const Center(
@@ -116,8 +140,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   prefixIcon: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () {
-                      // Perform the search here
-                      print(_searchControler.text);
+                      if (_searchControler.text.trim().isEmpty) {
+                        _showMessage("Please insert a valid keyword");
+                      } else {
+                        _searchMovie(_searchControler.text.trim());
+                      }
                     },
                   ),
                   border: OutlineInputBorder(
@@ -153,48 +180,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: CircularProgressIndicator(),
     );
   }
-
-  /*Widget _getMovieLoadingWidget(List<Genre> genreList) {
-    return Padding(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        children: [
-          Container(
-            height: 44,
-            child: MovieGeneresList(
-              genres: genreList,
-            ),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: TextField(
-              controller: _searchControler,
-              decoration: InputDecoration(
-                hintText: 'Search your movie...',
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () => _searchControler.clear(),
-                ),
-                prefixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    // Perform the search here
-                    print(_searchControler.text);
-                  },
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          _getLoadingWidget(),
-        ],
-      ),
-    );
-  }*/
 }

@@ -26,55 +26,55 @@ class MovieDbRemoteDataSourceImpl extends RemoteDataSource {
           voteCount: 1,
           voteAverage: 5),
       Movie(
-          title: "Avenger",
+          title: "Spider Man",
           backdropPath:
               'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
           voteCount: 1,
           voteAverage: 5),
       Movie(
-          title: "Avenger",
+          title: "Mission Impossible",
           backdropPath:
               'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
           voteCount: 1,
           voteAverage: 5),
       Movie(
-          title: "Avenger",
+          title: "Ghost Rider",
           backdropPath:
               'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
           voteCount: 1,
           voteAverage: 5),
       Movie(
-          title: "Avenger",
+          title: "King Of Fighters",
           backdropPath:
               'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
           voteCount: 1,
           voteAverage: 5),
       Movie(
-          title: "Avenger",
+          title: "Babys Day Out",
           backdropPath:
               'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
           voteCount: 1,
           voteAverage: 5),
       Movie(
-          title: "Avenger",
+          title: "Kingdom",
           backdropPath:
               'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
           voteCount: 1,
           voteAverage: 5),
       Movie(
-          title: "Avenger",
+          title: "The Last Samurai",
           backdropPath:
               'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
           voteCount: 1,
           voteAverage: 5),
       Movie(
-          title: "Avenger",
+          title: "Iron Man",
           backdropPath:
               'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
           voteCount: 1,
           voteAverage: 5),
       Movie(
-          title: "Avenger",
+          title: "Thor",
           backdropPath:
               'http://image.tmdb.org/t/p/w185/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg',
           voteCount: 1,

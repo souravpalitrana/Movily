@@ -8,9 +8,11 @@ class SimpleInMemoryCacheDataSourceImpl extends CacheDataSource {
   Future<List<Movie>> searchMovie(String keyword) async {
     List<Movie> filteredMovies = [];
     _cachedMovies.map((movie) {
-      if (movie.title.contains(keyword)) {
+      movie.title = "Seached : ${movie.title}";
+      /*if (movie.title.contains(keyword)) {
         filteredMovies.add(movie);
-      }
+      }*/
+      filteredMovies.add(movie);
     });
     return filteredMovies;
   }
