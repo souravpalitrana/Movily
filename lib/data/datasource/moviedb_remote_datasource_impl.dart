@@ -1,10 +1,13 @@
 import 'package:movily_app/domain/datasource/remote_datasource.dart';
 import 'package:movily_app/domain/entities/genre.dart';
 import 'package:movily_app/domain/entities/movie.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MovieDbRemoteDataSourceImpl extends RemoteDataSource {
   @override
   Future<List<Genre>> getGenre() async {
+    // Call api to get data
     return [
       Genre(id: 1, name: "Action"),
       Genre(id: 1, name: "Adventure"),
@@ -18,6 +21,7 @@ class MovieDbRemoteDataSourceImpl extends RemoteDataSource {
 
   @override
   Future<List<Movie>> getMoviesByGenre(String name) async {
+    // Call api to get data
     return [
       Movie(
           title: "Avenger",
