@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movily_app/presentation/base/app_constants.dart';
 import 'package:movily_app/presentation/features/home/widgets/movie_genres_list.dart';
+import 'package:movily_app/presentation/features/home/widgets/movie_list.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -106,6 +107,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 24),
+            Expanded(child: MovieList()),
           ],
         ),
       );
